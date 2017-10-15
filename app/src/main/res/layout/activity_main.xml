@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.example.kasia.s305327mappe2.MainActivity">
+
+    <Button
+        android:id="@+id/list_students"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="list"
+        android:text="Vis alle studenter" />
+
+    <Button
+        android:id="@+id/add_student"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="add"
+        android:text="Legg til" />
+
+    <Button
+        android:id="@+id/send_msg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="send"
+        android:text="Send melding til alle" />
+
+</LinearLayout>
