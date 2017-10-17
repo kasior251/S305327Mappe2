@@ -5,15 +5,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity {
 
-    DBHandler dbHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        dbHandler = new DBHandler(this);
     }
 
     public void add(View v) {
@@ -27,6 +28,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void send(View v) {
-
+        Intent intent = new Intent(this, CreateMessage.class);
+        //List<String> = new ArrayList<>();
+        startActivity(intent);
     }
 }

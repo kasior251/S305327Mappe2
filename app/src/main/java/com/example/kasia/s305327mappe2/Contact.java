@@ -1,62 +1,77 @@
 package com.example.kasia.s305327mappe2;
 
+import android.app.Activity;
+import android.content.ContentResolver;
+import android.database.Cursor;
+import android.widget.CheckBox;
+
+import java.util.ArrayList;
+import java.util.List;
+
 /**
- * Created by Kasia on 10.10.2017.
+ * Created by Kasia on 17.10.2017.
  */
 
 public class Contact {
 
-    private long _ID;
-    private String First;
-    private String Last;
+    private int _ID;
+    private String first;
+    private String last;
     private String Phone;
 
-    public Contact() {
+    public int get_ID() {
+        return _ID;
     }
 
-    public Contact(String first, String last, String phone) {
-        First = first;
-        Last = last;
-        Phone = phone;
-    }
-
-    public Contact(long _ID, String first, String last, String phone) {
+    public void set_ID(int _ID) {
         this._ID = _ID;
-        First = first;
-        Last = last;
-        Phone = phone;
     }
 
-    public void set_ID(long _ID) {
-        this._ID = _ID;
+    public String getFirst() {
+        return first;
     }
 
     public void setFirst(String first) {
-        First = first;
+        this.first = first;
+    }
+
+    public String getLast() {
+        return last;
     }
 
     public void setLast(String last) {
-        Last = last;
+        this.last = last;
+    }
+
+    public String getPhone() {
+        return Phone;
     }
 
     public void setPhone(String phone) {
         Phone = phone;
     }
 
-    public long get_ID() {
+    public Contact() {
 
-        return _ID;
     }
 
-    public String getFirst() {
-        return First;
+    public Contact(int _ID, String first, String last, String phone) {
+
+        this._ID = _ID;
+        this.first = first;
+        this.last = last;
+        Phone = phone;
     }
 
-    public String getLast() {
-        return Last;
+    public Contact(String first, String last, String phone) {
+
+        this.first = first;
+        this.last = last;
+        Phone = phone;
     }
 
-    public String getPhone() {
-        return Phone;
+    public Contact(int _ID) {
+
+        this._ID = _ID;
     }
 }
