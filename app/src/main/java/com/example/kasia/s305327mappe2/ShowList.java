@@ -10,7 +10,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -25,7 +27,6 @@ public class ShowList extends AppCompatActivity implements CompoundButton.OnChec
     LinearLayout layout;
     String text;
     boolean allChecked = false;
-    List<String> contacts;
     List<CheckBox> checkBoxes = new ArrayList<CheckBox>();
 
     @Override
@@ -33,6 +34,15 @@ public class ShowList extends AppCompatActivity implements CompoundButton.OnChec
         super.onCreate(savedInstanceState);
         setContentView(R.layout.showlist_activity);
         findAll();
+    }
+
+    @Override
+    protected void onActivityResult(int requestedCode, int resultCode, Intent data) {
+        super.onActivityResult(requestedCode, resultCode, data);
+        if (requestedCode == 111) {
+            finish();
+            startActivity(getIntent());
+        }
     }
 
     private void findAll() {
@@ -98,37 +108,57 @@ public class ShowList extends AppCompatActivity implements CompoundButton.OnChec
         startActivity(intent);
     }
 
-    //prøve å gjøre det async???!!!
-    /*
     public void edit(View v) {
         List<String> idList = getCheckedId();
-
         for (String s : idList) {
-            String[] projection = new String[] {ContactProvider.KEY_FIRSTNAME, ContactProvider.KEY_LASTNAME, ContactProvider.KEY_TEL_NR};
+            String[] projection = new String[] {ContactProvider.KEY_ID, ContactProvider.KEY_FIRSTNAME, ContactProvider.KEY_LASTNAME, ContactProvider.KEY_TEL_NR};
 
             Cursor cursor = getContentResolver().query(ContactProvider.URI, projection, ContactProvider.KEY_ID + " = ? ",
                     new String[] {s}, null);
 
-            if (cursor.moveToFirst()) {
-                String fname = cursor.getString(cursor.getColumnIndex(ContactProvider.KEY_FIRSTNAME));
-                String lname = cursor.getString(cursor.getColumnIndex(ContactProvider.KEY_LASTNAME));
-                String phone = cursor.getString(cursor.getColumnIndex(ContactProvider.KEY_TEL_NR));
-                Intent i = new Intent(this, Edit.class);
-                i.putExtra("fname", fname);
-                i.putExtra("lname", lname);
-                i.putExtra("phone", phone);
-                startActivity(i);
+            finish();
 
+            if (cursor.moveToFirst()) {
+                do {
+                    String id = cursor.getString(cursor.getColumnIndex(ContactProvider.KEY_ID));
+                    String fname = cursor.getString(cursor.getColumnIndex(ContactProvider.KEY_FIRSTNAME));
+                    String lname = cursor.getString(cursor.getColumnIndex(ContactProvider.KEY_LASTNAME));
+                    String phone = cursor.getString(cursor.getColumnIndex(ContactProvider.KEY_TEL_NR));
+                    Intent i = new Intent(this, Edit.class);
+                    i.putExtra("id", id);
+                    i.putExtra("fname", fname);
+                    i.putExtra("lname", lname);
+                    i.putExtra("phone", phone);
+                    startActivity(i);
+                } while (cursor.moveToNext());
             }
         }
-        Intent intent = getIntent();
-        finish();
-        startActivity(intent);
-    }*/
+    }
+
+
+    public void sendMsg(View v) {
+        ArrayList<String> idNumbers = getCheckedId();
+        ArrayList<String> numbers = new ArrayList<>();
+        String[] projection = new String[] {ContactProvider.KEY_TEL_NR};
+
+        for (String s : idNumbers) {
+            Cursor cursor = getContentResolver().query(ContactProvider.URI, projection, ContactProvider.KEY_ID + " = ? ",
+                    new String[] {s}, null);
+            if (cursor.moveToFirst()) {
+                String nrTel = cursor.getString(cursor.getColumnIndex(ContactProvider.KEY_TEL_NR));
+                numbers.add(nrTel);
+            }
+        }
+
+
+        Intent intent = new Intent(this, CreateMessage.class);
+        intent.putStringArrayListExtra("numbers", numbers);
+        this.startActivity(intent);
+    }
 
     //hjelpemetode for å få id nmrene over checked kontakter
-    private List<String> getCheckedId() {
-        List<String> idList = new ArrayList<>();
+    private ArrayList<String> getCheckedId() {
+        ArrayList<String> idList = new ArrayList<>();
         for (CheckBox cb: checkBoxes) {
             if (cb.isChecked()) {
                 idList.add(Integer.toString(cb.getId()));

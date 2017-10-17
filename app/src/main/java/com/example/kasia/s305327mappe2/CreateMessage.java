@@ -13,6 +13,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -27,6 +28,7 @@ public class CreateMessage extends AppCompatActivity
 
     EditText message;
     Button sendButton;
+    ArrayList<String> numbers;
 
     int day, month, year, hour, minute, setDay, setMonth, setYear, setHour, setMinute;
 
@@ -36,15 +38,24 @@ public class CreateMessage extends AppCompatActivity
         setContentView(R.layout.createmessage_activity);
     }
 
-    public void sendNow(View v) {
-        ArrayList<String> numbers = new ArrayList<>();
-        String[] projection = new String[] {ContactProvider.KEY_TEL_NR};
-        Cursor cursor = getContentResolver().query(ContactProvider.URI, projection, null, null, null);
-        if (cursor.moveToFirst()) {
-            do {
-                numbers.add(cursor.getString(cursor.getColumnIndex(ContactProvider.KEY_TEL_NR)));
-            } while (cursor.moveToNext());
+    private ArrayList<String> setNrList() {
+        ArrayList<String> checkedId = getIntent().getStringArrayListExtra("numbers");
+        if (checkedId == null) {
+            checkedId = new ArrayList<>();
+            String[] projection = new String[] {ContactProvider.KEY_TEL_NR};
+            Cursor cursor = getContentResolver().query(ContactProvider.URI, projection, null, null, null);
+            if (cursor.moveToFirst()) {
+                do {
+                    Toast.makeText(this, "adding", Toast.LENGTH_SHORT).show();
+                    checkedId.add(cursor.getString(cursor.getColumnIndex(ContactProvider.KEY_TEL_NR)));
+                } while (cursor.moveToNext());
+            }
         }
+        return checkedId;
+    }
+
+    public void sendNow(View v) {
+        numbers = setNrList();
         Intent intent = new Intent(this, SendMessage.class);
         intent.putStringArrayListExtra("numbers", numbers);
         intent.putExtra("message", ((EditText)findViewById(R.id.message)).getText().toString());

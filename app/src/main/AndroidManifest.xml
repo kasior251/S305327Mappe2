@@ -32,6 +32,9 @@
         <activity android:name=".CreateMessage"
             android:parentActivityName=".MainActivity">
         </activity>
+        <activity android:name=".Edit"
+            android:parentActivityName=".ShowList">
+        </activity>
         <service android:name=".SendMessage"></service>
     </application>
 

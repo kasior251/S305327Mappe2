@@ -80,7 +80,12 @@ public class ContactProvider extends ContentProvider {
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
         Cursor cursor = null;
+        if(uriMatcher.match(uri) == uriCode) {
+            cursor = db.query(TABLE_CONTACTS, projection, selection, selectionArgs, null, null, sortOrder);
+        }
+        else {
             cursor = db.query(TABLE_CONTACTS, null, null, null, null, null, null);
+        }
             return cursor;
 
     }
@@ -129,7 +134,11 @@ public class ContactProvider extends ContentProvider {
 
     @Override
     public int update(@NonNull Uri uri, @Nullable ContentValues contentValues, @Nullable String s, @Nullable String[] strings) {
+        if (uriMatcher.match(uri) == uriCode) {
+            db.update(TABLE_CONTACTS, contentValues, s, strings);
+            getContext().getContentResolver().notifyChange(uri, null);
+            return 1;
+        }
         return 0;
     }
-
 }

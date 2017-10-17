@@ -30,7 +30,15 @@ public class AddStudent extends AppCompatActivity{
         ContentValues values = new ContentValues();
         values.put(ContactProvider.KEY_FIRSTNAME, fname.getText().toString());
         values.put(ContactProvider.KEY_LASTNAME, lname.getText().toString());
-        values.put(ContactProvider.KEY_TEL_NR, Integer.parseInt(tlf.getText().toString()));
+        try {
+            values.put(ContactProvider.KEY_TEL_NR, Integer.parseInt(tlf.getText().toString()));
+        } catch (java.lang.NumberFormatException e) {
+
+            //endre til en pop-up vindu?
+            Toast.makeText(this, "Feil format på tlf nummer", Toast.LENGTH_SHORT).show();
+            tlf.setText("");
+            return;
+        }
         getContentResolver().insert(ContactProvider.URI, values);
         fname.setText("");
         lname.setText("");
