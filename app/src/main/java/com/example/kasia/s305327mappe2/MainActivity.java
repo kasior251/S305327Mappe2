@@ -1,6 +1,7 @@
 package com.example.kasia.s305327mappe2;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -29,7 +30,19 @@ public class MainActivity extends AppCompatActivity {
 
     public void send(View v) {
         Intent intent = new Intent(this, CreateMessage.class);
-        //List<String> = new ArrayList<>();
+
+        //trenges ikke - håndtert i CreateMessage
+        /*ArrayList<String> numbers = new ArrayList<>();
+        String[] projection = new String[] {ContactProvider.KEY_TEL_NR};
+        //hent alle registrerte tlf numrene
+        Cursor cursor = getContentResolver().query(ContactProvider.URI, projection, null, null, null);
+        if (cursor.moveToFirst()) {
+            do {
+                numbers.add(cursor.getString(cursor.getColumnIndex(ContactProvider.KEY_TEL_NR)));
+            } while (cursor.moveToNext());
+        }
+
+        intent.putStringArrayListExtra("numbers", numbers);*/
         startActivity(intent);
     }
 }

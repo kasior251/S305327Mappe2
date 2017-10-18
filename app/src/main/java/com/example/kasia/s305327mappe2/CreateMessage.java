@@ -15,8 +15,12 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -36,6 +40,8 @@ public class CreateMessage extends AppCompatActivity
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.createmessage_activity);
+        message = (EditText) findViewById(R.id.message);
+        numbers = setNrList();
     }
 
     private ArrayList<String> setNrList() {
@@ -46,7 +52,6 @@ public class CreateMessage extends AppCompatActivity
             Cursor cursor = getContentResolver().query(ContactProvider.URI, projection, null, null, null);
             if (cursor.moveToFirst()) {
                 do {
-                    Toast.makeText(this, "adding", Toast.LENGTH_SHORT).show();
                     checkedId.add(cursor.getString(cursor.getColumnIndex(ContactProvider.KEY_TEL_NR)));
                 } while (cursor.moveToNext());
             }
@@ -55,7 +60,6 @@ public class CreateMessage extends AppCompatActivity
     }
 
     public void sendNow(View v) {
-        numbers = setNrList();
         Intent intent = new Intent(this, SendMessage.class);
         intent.putStringArrayListExtra("numbers", numbers);
         intent.putExtra("message", ((EditText)findViewById(R.id.message)).getText().toString());
@@ -91,6 +95,21 @@ public class CreateMessage extends AppCompatActivity
         setHour = i;
         setMinute = i1;
         TextView date = (TextView) findViewById(R.id.date);
-        date.setText("Date " + setYear + "/" + setMonth + "/" + setDay + " " + setHour + ":" + setMinute);
+        String dateToConvert = setYear + "/" + setMonth + "/" + setDay + " " + setHour + ":" + setMinute;
+        SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd HH:mm");
+        long dateMillis = 0;
+        try {
+             dateMillis = (format.parse(dateToConvert)).getTime();
+        } catch (ParseException e) {
+            //parse exception bør ikke skje siden Strengen som parses er formatert
+            e.printStackTrace();
+            Toast.makeText(getApplicationContext(), "Prøv igjen senere", Toast.LENGTH_LONG).show();
+            finish();
+        }
+        date.setText(Long.toString(dateMillis));
+
+        MessageDB db = new MessageDB(getApplicationContext());
+        db.saveMessage(message.getText().toString(), numbers, dateMillis, false);
+        Toast.makeText(getApplicationContext(), "Meldinger lagret", Toast.LENGTH_SHORT).show();
     }
 }
