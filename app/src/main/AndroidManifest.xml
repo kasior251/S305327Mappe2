@@ -26,6 +26,9 @@
         <activity android:name=".AddStudent"
             android:parentActivityName=".MainActivity">
         </activity>
+        <activity android:name=".ShowPreferences"
+            android:parentActivityName=".MainActivity">
+            </activity>
         <activity android:name=".ShowList"
             android:parentActivityName=".MainActivity">
         </activity>

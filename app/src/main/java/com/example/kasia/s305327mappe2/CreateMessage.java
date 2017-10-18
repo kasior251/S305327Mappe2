@@ -64,6 +64,7 @@ public class CreateMessage extends AppCompatActivity
         intent.putStringArrayListExtra("numbers", numbers);
         intent.putExtra("message", ((EditText)findViewById(R.id.message)).getText().toString());
         this.startService(intent);
+        message.setText("");
     }
 
     public void sendLater(View v) {
@@ -111,5 +112,6 @@ public class CreateMessage extends AppCompatActivity
         MessageDB db = new MessageDB(getApplicationContext());
         db.saveMessage(message.getText().toString(), numbers, dateMillis, false);
         Toast.makeText(getApplicationContext(), "Meldinger lagret", Toast.LENGTH_SHORT).show();
+        message.setText("");
     }
 }

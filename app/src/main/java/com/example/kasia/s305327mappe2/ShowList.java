@@ -36,15 +36,6 @@ public class ShowList extends AppCompatActivity implements CompoundButton.OnChec
         findAll();
     }
 
-    @Override
-    protected void onActivityResult(int requestedCode, int resultCode, Intent data) {
-        super.onActivityResult(requestedCode, resultCode, data);
-        if (requestedCode == 111) {
-            finish();
-            startActivity(getIntent());
-        }
-    }
-
     private void findAll() {
 
         //felt som vi skal ha med i viewet
@@ -98,9 +89,13 @@ public class ShowList extends AppCompatActivity implements CompoundButton.OnChec
     }
 
     public void delete(View v) {
-        List<String> idList = getCheckedId();
+        ArrayList<String> idNumbers = getCheckedId();
 
-        for (String s : idList) {
+        if (!isSelected(idNumbers)) {
+            return;
+        }
+
+        for (String s : idNumbers) {
             getContentResolver().delete(ContactProvider.URI, ContactProvider.KEY_ID + " = ? ",new String[]{s} );
         }
         Intent intent = getIntent();
@@ -109,8 +104,11 @@ public class ShowList extends AppCompatActivity implements CompoundButton.OnChec
     }
 
     public void edit(View v) {
-        List<String> idList = getCheckedId();
-        for (String s : idList) {
+        ArrayList<String> idNumbers = getCheckedId();
+        if (!isSelected(idNumbers)) {
+            return;
+        }
+        for (String s : idNumbers) {
             String[] projection = new String[] {ContactProvider.KEY_ID, ContactProvider.KEY_FIRSTNAME, ContactProvider.KEY_LASTNAME, ContactProvider.KEY_TEL_NR};
 
             Cursor cursor = getContentResolver().query(ContactProvider.URI, projection, ContactProvider.KEY_ID + " = ? ",
@@ -138,6 +136,10 @@ public class ShowList extends AppCompatActivity implements CompoundButton.OnChec
 
     public void sendMsg(View v) {
         ArrayList<String> idNumbers = getCheckedId();
+        if (!isSelected(idNumbers)) {
+            return;
+        }
+
         ArrayList<String> numbers = new ArrayList<>();
         String[] projection = new String[] {ContactProvider.KEY_TEL_NR};
 
@@ -160,11 +162,23 @@ public class ShowList extends AppCompatActivity implements CompoundButton.OnChec
     private ArrayList<String> getCheckedId() {
         ArrayList<String> idList = new ArrayList<>();
         for (CheckBox cb: checkBoxes) {
+            //ta ikke med den første check-boxen
+            if(cb.getId() == 0)
+                continue;
             if (cb.isChecked()) {
                 idList.add(Integer.toString(cb.getId()));
             }
         }
         return idList;
+    }
+
+    //returnerer false hvis ingen kontakt er valgt
+    private boolean isSelected(ArrayList<String> idNumbers) {
+        if (idNumbers.size() < 1) {
+            Toast.makeText(this, "Velg minimum én kontakt fra lista", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
     }
 
 }
