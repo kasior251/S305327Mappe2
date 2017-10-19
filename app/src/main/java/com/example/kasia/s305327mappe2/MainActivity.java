@@ -16,12 +16,26 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
 
+    //hvis variabelen er satt til true vil utsatte meldinger sendes
+    private static boolean sending = false;
+
+    public static void setSending(boolean setValue) {
+        sending = setValue;
+    }
+
+    public static boolean getSending() {
+        return sending;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        Intent intent = new Intent();
+        intent.setAction("com.example.kasia.s305327mappe2.mybroadcast");
+        sendBroadcast(intent);
     }
 
     @Override

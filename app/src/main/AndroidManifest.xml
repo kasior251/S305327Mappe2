@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.kasia.s305327mappe2">
     <uses-permission android:name="android.permission.SEND_SMS" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
         android:allowBackup="true"
@@ -16,6 +17,12 @@
             android:exported="true"
             android:multiprocess="true">
         </provider>
+        <receiver android:name=".MyBroadcastReceiver">
+            <intent-filter>
+                <action android:name="com.example.kasia.s305327mappe2.mybroadcast" />
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -39,6 +46,8 @@
             android:parentActivityName=".ShowList">
         </activity>
         <service android:name=".SendMessage"></service>
+        <service android:name=".CheckPendingMessages" />
+        <service android:name=".GetPendingMessages" />
     </application>
 
 </manifest>

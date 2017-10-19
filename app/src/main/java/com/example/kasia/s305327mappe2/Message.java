@@ -56,6 +56,10 @@ public class Message {
         this.periodic = periodic;
     }
 
+    public Message() {
+
+    }
+
     public Message(String text, long time) {
 
         this.text = text;

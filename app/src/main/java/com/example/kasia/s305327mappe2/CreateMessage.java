@@ -17,7 +17,6 @@ import android.widget.Toast;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -80,7 +79,7 @@ public class CreateMessage extends AppCompatActivity
     @Override
     public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
         setYear = i;
-        setMonth = i1;
+        setMonth = i1+1;
         setDay = i2;
 
         Calendar calendar = Calendar.getInstance();
@@ -97,21 +96,28 @@ public class CreateMessage extends AppCompatActivity
         setMinute = i1;
         TextView date = (TextView) findViewById(R.id.date);
         String dateToConvert = setYear + "/" + setMonth + "/" + setDay + " " + setHour + ":" + setMinute;
+        Toast.makeText(getApplicationContext(), dateToConvert, Toast.LENGTH_LONG).show();
         SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd HH:mm");
         long dateMillis = 0;
+        long now = System.currentTimeMillis();
         try {
              dateMillis = (format.parse(dateToConvert)).getTime();
         } catch (ParseException e) {
             //parse exception bør ikke skje siden Strengen som parses er formatert
-            e.printStackTrace();
-            Toast.makeText(getApplicationContext(), "Prøv igjen senere", Toast.LENGTH_LONG).show();
-            finish();
+        e.printStackTrace();
+        Toast.makeText(getApplicationContext(), "Prøv igjen senere", Toast.LENGTH_SHORT).show();
+        finish();
+    }
+
+        if (dateMillis < now + (5 * 60 * 1000) ) {
+            //endre til pop-up vindu?
+            Toast.makeText(getApplicationContext(), "Du må velge et tilspunkt min. 5 minutter fra nå", Toast.LENGTH_SHORT ).show();
+            return;
         }
-        date.setText(Long.toString(dateMillis));
 
         MessageDB db = new MessageDB(getApplicationContext());
         db.saveMessage(message.getText().toString(), numbers, dateMillis, false);
-        Toast.makeText(getApplicationContext(), "Meldinger lagret", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), "Meldingene lagret, skal sendes på senere tidspunkt", Toast.LENGTH_SHORT).show();
         message.setText("");
     }
 }
