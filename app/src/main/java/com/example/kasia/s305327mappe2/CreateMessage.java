@@ -61,12 +61,33 @@ public class CreateMessage extends AppCompatActivity
     public void sendNow(View v) {
         Intent intent = new Intent(this, SendMessage.class);
         intent.putStringArrayListExtra("numbers", numbers);
-        intent.putExtra("message", ((EditText)findViewById(R.id.message)).getText().toString());
+        String messageText = ((EditText)findViewById(R.id.message)).getText().toString();
+        if (!textOk(messageText))
+        {
+            return;
+        }
+        intent.putExtra("message", messageText);
         this.startService(intent);
         message.setText("");
     }
 
+    //sjekke om meldingen inneholder minimum 3 tegn
+    private boolean textOk (String messageText) {
+        if (messageText.length() < 3) {
+
+            //endre til popup vindu
+            Toast.makeText(this, "Meldingen må inneholde minimum 3 tegn!", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
+    }
+
     public void sendLater(View v) {
+        String messageText = ((EditText)findViewById(R.id.message)).getText().toString();
+        if (!textOk(messageText))
+        {
+            return;
+        }
         Calendar calendar = Calendar.getInstance();
         year = calendar.get(Calendar.YEAR);
         month = calendar.get(Calendar.MONTH);

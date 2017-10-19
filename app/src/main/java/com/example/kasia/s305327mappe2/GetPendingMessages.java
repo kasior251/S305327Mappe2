@@ -12,7 +12,9 @@ import android.util.Log;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -66,11 +68,22 @@ public class GetPendingMessages extends Service {
     }
 
     private void messageHandler(ArrayList<Message> messages) {
-        long now = System.currentTimeMillis() / 1000;
+        long now = System.currentTimeMillis();
+        Date date = new Date(now);
+        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yy HH:mm");
+        String dateText = df.format(date);
+        Toast.makeText(getApplicationContext(), "Date " + dateText, Toast.LENGTH_SHORT).show();
         for (Message m : messages) {
-            if (m.getTime() / 1000 + 60 >= now) {
+            Log.d("TIME", "now " + now + "should be sent " + m.getTime());
+            //sende kun meldinger som er due i løpet av neste 65 sekunder
+            if (m.getTime() > now && m.getTime() < now + 65 * 1000) {
                 sendMessage(m);
             }
+            else if (m.getTime() > now + 65 * 1000) {
+                //dersom meldingen ikke er due ennå, fortsett til neste
+                continue;
+            }
+            //behandle meldingen (slett eller oppdater med ny dato)
             deleteMessage(m);
         }
     }
