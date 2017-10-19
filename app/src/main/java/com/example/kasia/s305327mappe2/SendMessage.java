@@ -2,6 +2,7 @@ package com.example.kasia.s305327mappe2;
 
 import android.app.Service;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.telephony.SmsManager;
@@ -22,6 +23,16 @@ public class SendMessage extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         receivers = intent.getStringArrayListExtra("numbers");
+        if (receivers.get(0).equals("0")) {
+            receivers.remove(0);
+            String[] projection = new String[] {ContactProvider.KEY_TEL_NR};
+            Cursor cursor = getContentResolver().query(ContactProvider.URI, projection, null, null, null);
+            if (cursor.moveToFirst()) {
+                do {
+                    receivers.add(cursor.getString(cursor.getColumnIndex(ContactProvider.KEY_TEL_NR)));
+                } while (cursor.moveToNext());
+            }
+        }
         message = intent.getStringExtra("message");
         SmsManager manager = SmsManager.getDefault();
         for (String s : receivers)

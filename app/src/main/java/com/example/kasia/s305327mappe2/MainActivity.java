@@ -50,6 +50,9 @@ public class MainActivity extends AppCompatActivity {
             case R.id.preferences:
                 Intent intent = new Intent(getApplicationContext(), ShowPreferences.class);
                 startActivity(intent);
+            case R.id.weeklymsg:
+                Intent intent2 = new Intent(getApplicationContext(), CreateWeeklyMessage.class);
+                startActivity(intent2);
         }
         return true;
     }

@@ -45,6 +45,7 @@ public class CreateMessage extends AppCompatActivity
 
     private ArrayList<String> setNrList() {
         ArrayList<String> checkedId = getIntent().getStringArrayListExtra("numbers");
+        //hvis ingen ArrayList var med i intenten - sendes til alle
         if (checkedId == null) {
             checkedId = new ArrayList<>();
             String[] projection = new String[] {ContactProvider.KEY_TEL_NR};

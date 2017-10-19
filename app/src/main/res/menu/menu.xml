@@ -5,7 +5,11 @@
         android:id="@+id/preferences"
         android:title="Preferanser"
         app:showAsAction="always">
-
+    </item>
+    <item
+        android:id="@+id/weeklymsg"
+        android:title="Sett ukentlig melding"
+        app:showAsAction="always">
     </item>
 
 </menu>

@@ -76,15 +76,18 @@ public class GetPendingMessages extends Service {
         for (Message m : messages) {
             Log.d("TIME", "now " + now + "should be sent " + m.getTime());
             //sende kun meldinger som er due i løpet av neste 65 sekunder
-            if (m.getTime() > now && m.getTime() < now + 65 * 1000) {
-                sendMessage(m);
+            if (now > m.getTime()) {
+                if (now < m.getTime() + 65*1000) {
+                    sendMessage(m);
+                }
+                //behandle meldingen (slett eller oppdater med ny dato)
+                deleteMessage(m);
             }
-            else if (m.getTime() > now + 65 * 1000) {
+            else  {
                 //dersom meldingen ikke er due ennå, fortsett til neste
                 continue;
             }
-            //behandle meldingen (slett eller oppdater med ny dato)
-            deleteMessage(m);
+
         }
     }
 
